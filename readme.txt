@@ -1,0 +1,1 @@
+This project will be web crawling for video game news. 
