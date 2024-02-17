@@ -4,11 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game News</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #282c34; /* Dark background */
+            color: #ffffff; /* Light text */
+        }
+        .header {
+            background-color: #20232a;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #61dafb; /* React blue */
+        }
+        #fetch-news-btn {
+            background-color: #61dafb; /* React blue */
+            border: none;
+            padding: 10px 20px;
+            color: #20232a;
+            text-transform: uppercase;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #news-list {
+            list-style: none;
+            padding: 0;
+        }
+        #news-list li {
+            background-color: #333842;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Latest Video Game News</h1>
-    <button id="fetch-news-btn">Fetch News</button>
-    <ul id="news-list"></ul>
+    <div class="header">
+        <h1>Latest Video Game News</h1>
+    </div>
+    <div style="text-align: center;">
+        <button id="fetch-news-btn">Fetch News</button>
+        <ul id="news-list"></ul>
+    </div>
 
     <script>
         document.getElementById('fetch-news-btn').addEventListener('click', function() {
