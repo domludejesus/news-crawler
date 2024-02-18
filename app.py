@@ -92,5 +92,27 @@ def get_news():
     news_items = fetch_news(url)
     return {'titles': news_items}
 
+@app.route('/fetch-ai-news')
+@login_required
+def fetch_ai_news():
+    url = 'https://openai.com/blog'
+    news_items = []
+    response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # Assuming the h3 tag is wrapped in or followed by an <a> tag
+        articles = soup.find_all('h3', class_='f-subhead-2 mt-8')
+        for article in articles:
+            title = article.text.strip()
+            # Navigate to the parent or next sibling <a> tag to get the link
+            link = article.find_parent('a')['href'] if article.find_parent('a') else None
+            if link and not link.startswith('http'):
+                link = urljoin(url, link)
+            if link:  # Ensure there's a link before adding to the list
+                news_items.append({'title': title, 'link': link})
+    return {'titles': news_items}
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

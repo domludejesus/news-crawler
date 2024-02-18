@@ -77,6 +77,10 @@
             <button id="fetch-news-btn">Fetch Video Game  News</button>
             <ul id="news-list"></ul>
         </div>
+        <div style="text-align: center;">
+            <button id="fetch-ai-news-btn">Fetch AI News</button>
+            <ul id="ai-news-list" style="display: none;"></ul>
+        </div>
         <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/h8ISB2nUVITEWjVgGo" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/nintendo-animal-crossing-new-horizons-h8ISB2nUVITEWjVgGo">via GIPHY</a></p>
 
 
@@ -117,6 +121,43 @@
                 }
             });
         </script>
+
+<script>
+    // New script for fetching and toggling AI news
+    document.getElementById('fetch-ai-news-btn').addEventListener('click', function() {
+        const aiNewsList = document.getElementById('ai-news-list');
+        const fetchAINewsBtn = document.getElementById('fetch-ai-news-btn');
+
+        if (aiNewsList.style.display === 'none' || aiNewsList.innerHTML === '') {
+            if (aiNewsList.innerHTML === '') {
+                fetch('/fetch-ai-news')
+                    .then(response => response.json())
+                    .then(data => {
+                        aiNewsList.innerHTML = '';
+                        data.titles.forEach(item => {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = item.link;
+                            link.textContent = item.title;
+                            link.target = "_blank"; // Open in a new tab/window
+                            listItem.appendChild(link);
+                            aiNewsList.appendChild(listItem);
+                        });
+                        aiNewsList.style.display = 'block';
+                        fetchAINewsBtn.textContent = 'Hide AI News';
+                    })
+                    .catch(error => console.error('Error fetching AI news:', error));
+            } else {
+                aiNewsList.style.display = 'block';
+                fetchAINewsBtn.textContent = 'Hide AI News';
+            }
+        } else {
+            aiNewsList.style.display = 'none';
+            aiNewsList.innerHTML = '';
+            fetchAINewsBtn.textContent = 'Fetch AI News';
+        }
+    });
+</script>
         
     {% else %}
         <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest tech news.</p>
