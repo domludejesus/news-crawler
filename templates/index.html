@@ -34,6 +34,7 @@
         #news-list {
             list-style: none;
             padding: 0;
+            display: none; /* Initially hide the news list */
         }
         #news-list li {
             background-color: #333842;
@@ -62,7 +63,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Latest Video Game News</h1>
+        <h1>Latest Tech / Videogame / AI News </h1>
     </div>
     <div class="nav">
         {% if current_user.is_authenticated %}
@@ -73,7 +74,7 @@
     </div>
     {% if current_user.is_authenticated %}
         <div style="text-align: center;">
-            <button id="fetch-news-btn">Fetch News</button>
+            <button id="fetch-news-btn">Fetch Video Game  News</button>
             <ul id="news-list"></ul>
         </div>
         <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/h8ISB2nUVITEWjVgGo" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/nintendo-animal-crossing-new-horizons-h8ISB2nUVITEWjVgGo">via GIPHY</a></p>
@@ -81,26 +82,44 @@
 
         <script>
             document.getElementById('fetch-news-btn').addEventListener('click', function() {
-                fetch('/fetch-news')
-                    .then(response => response.json())
-                    .then(data => {
-                        const newsList = document.getElementById('news-list');
-                        newsList.innerHTML = '';
-                        data.titles.forEach(item => {
-                            const listItem = document.createElement('li');
-                            const link = document.createElement('a');
-                            link.href = item.link;
-                            link.textContent = item.title;
-                            link.target = "_blank"; // Open in a new tab/window
-                            listItem.appendChild(link);
-                            newsList.appendChild(listItem);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching news:', error));
+                const newsList = document.getElementById('news-list');
+                const fetchNewsBtn = document.getElementById('fetch-news-btn'); // Reference to the button
+        
+                // Check if the news list is visible
+                if (newsList.style.display === 'none' || newsList.innerHTML === '') {
+                    // If hidden or empty, fetch and display the news
+                    if (newsList.innerHTML === '') {
+                        fetch('/fetch-news')
+                            .then(response => response.json())
+                            .then(data => {
+                                newsList.innerHTML = ''; // Clear existing news, just in case
+                                data.titles.forEach(item => {
+                                    const listItem = document.createElement('li');
+                                    const link = document.createElement('a');
+                                    link.href = item.link;
+                                    link.textContent = item.title;
+                                    link.target = "_blank"; // Open in a new tab/window
+                                    listItem.appendChild(link);
+                                    newsList.appendChild(listItem);
+                                });
+                                newsList.style.display = 'block'; // Ensure the list is shown
+                                fetchNewsBtn.textContent = 'Hide Video Game News'; // Change button text
+                            })
+                            .catch(error => console.error('Error fetching news:', error));
+                    } else {
+                        newsList.style.display = 'block'; // Show the list if it was previously hidden
+                        fetchNewsBtn.textContent = 'Hide Video Game News'; // Change button text
+                    }
+                } else {
+                    // If the list is currently shown, hide it
+                    newsList.style.display = 'none';
+                    fetchNewsBtn.textContent = 'Fetch Video Game News'; // Revert button text
+                }
             });
         </script>
+        
     {% else %}
-        <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest video game news.</p>
+        <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest tech news.</p>
         <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/2CV4CzJpL88LHsgjhY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/p5-persona5-persona5strikers-2CV4CzJpL88LHsgjhY">via GIPHY</a></p>
     {% endif %}
 </body>
