@@ -3,19 +3,17 @@ import requests
 from bs4 import BeautifulSoup
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from urllib.parse import urljoin
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-# Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# In-memory user store
 users = {}
 
-# User class
 class User(UserMixin):
     def __init__(self, id, username, password):
         self.id = id
@@ -32,15 +30,19 @@ def fetch_news(url):
     news_items = []
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        titles = soup.find_all('span', class_=lambda x: x and 'item-title' in x and 'bold' in x)
-        for title in titles:
-            news_item = title.text.strip()
-            news_items.append(news_item)
+        articles = soup.find_all('a', href=True)
+        for article in articles:
+            title_span = article.find('span', class_=lambda x: x and 'item-title' in x and 'bold' in x)
+            if title_span:
+                title = title_span.text.strip()
+                link = article['href']
+                if not link.startswith('http'):
+                    link = urljoin(url, link)
+                news_items.append({'title': title, 'link': link})
     return news_items
 
 @app.route('/')
 def home():
-    # Directly render index.html with is_authenticated flag
     return render_template('index.html', is_authenticated=current_user.is_authenticated)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -75,9 +77,9 @@ def logout():
 @app.route('/fetch-news')
 @login_required
 def get_news():
-    url = 'https://www.ign.com/news'  # Adjust this URL as needed
-    news_titles = fetch_news(url)
-    return {'titles': news_titles}
+    url = 'https://www.ign.com/news'
+    news_items = fetch_news(url)
+    return {'titles': news_items}
 
 if __name__ == '__main__':
     app.run(debug=True)

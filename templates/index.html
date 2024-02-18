@@ -41,6 +41,13 @@
             padding: 10px;
             border-radius: 5px;
         }
+        #news-list li a { /* Style for links in the news list */
+            color: #ffffff; /* Set link color to white */
+            text-decoration: none; /* Optional: removes underline from links */
+        }
+        #news-list li a:hover { /* Optional: style for hover state */
+            color: #61dafb; /* Change color on hover */
+        }
         .nav {
             text-align: right;
             padding: 10px 20px;
@@ -51,6 +58,7 @@
             padding: 0 10px;
         }
     </style>
+    
 </head>
 <body>
     <div class="header">
@@ -68,6 +76,8 @@
             <button id="fetch-news-btn">Fetch News</button>
             <ul id="news-list"></ul>
         </div>
+        <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/h8ISB2nUVITEWjVgGo" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/nintendo-animal-crossing-new-horizons-h8ISB2nUVITEWjVgGo">via GIPHY</a></p>
+
 
         <script>
             document.getElementById('fetch-news-btn').addEventListener('click', function() {
@@ -75,10 +85,14 @@
                     .then(response => response.json())
                     .then(data => {
                         const newsList = document.getElementById('news-list');
-                        newsList.innerHTML = ''; // Clear existing news
-                        data.titles.forEach(title => {
-                            let listItem = document.createElement('li');
-                            listItem.textContent = title;
+                        newsList.innerHTML = '';
+                        data.titles.forEach(item => {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = item.link;
+                            link.textContent = item.title;
+                            link.target = "_blank"; // Open in a new tab/window
+                            listItem.appendChild(link);
                             newsList.appendChild(listItem);
                         });
                     })
@@ -87,6 +101,7 @@
         </script>
     {% else %}
         <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest video game news.</p>
+        <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/2CV4CzJpL88LHsgjhY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/p5-persona5-persona5strikers-2CV4CzJpL88LHsgjhY">via GIPHY</a></p>
     {% endif %}
 </body>
 </html>
