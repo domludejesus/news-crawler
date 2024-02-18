@@ -41,35 +41,52 @@
             padding: 10px;
             border-radius: 5px;
         }
+        .nav {
+            text-align: right;
+            padding: 10px 20px;
+        }
+        .nav a {
+            color: #61dafb;
+            text-decoration: none;
+            padding: 0 10px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Latest Video Game News</h1>
-        <div style="text-align: right;">
-            <a href="/login">Login</a> | <a href="/signup">Signup</a>
+    </div>
+    <div class="nav">
+        {% if current_user.is_authenticated %}
+            <a href="/logout">Sign Out</a>
+        {% else %}
+            <a href="/login">Login</a> | <a href="/signup">Sign Up</a>
+        {% endif %}
+    </div>
+    {% if current_user.is_authenticated %}
+        <div style="text-align: center;">
+            <button id="fetch-news-btn">Fetch News</button>
+            <ul id="news-list"></ul>
         </div>
-    </div>
-    <div style="text-align: center;">
-        <button id="fetch-news-btn">Fetch News</button>
-        <ul id="news-list"></ul>
-    </div>
 
-    <script>
-        document.getElementById('fetch-news-btn').addEventListener('click', function() {
-            fetch('/fetch-news')
-                .then(response => response.json())
-                .then(data => {
-                    const newsList = document.getElementById('news-list');
-                    newsList.innerHTML = ''; // Clear existing news
-                    data.titles.forEach(title => {
-                        let listItem = document.createElement('li');
-                        listItem.textContent = title;
-                        newsList.appendChild(listItem);
-                    });
-                })
-                .catch(error => console.error('Error fetching news:', error));
-        });
-    </script>
+        <script>
+            document.getElementById('fetch-news-btn').addEventListener('click', function() {
+                fetch('/fetch-news')
+                    .then(response => response.json())
+                    .then(data => {
+                        const newsList = document.getElementById('news-list');
+                        newsList.innerHTML = ''; // Clear existing news
+                        data.titles.forEach(title => {
+                            let listItem = document.createElement('li');
+                            listItem.textContent = title;
+                            newsList.appendChild(listItem);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching news:', error));
+            });
+        </script>
+    {% else %}
+        <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest video game news.</p>
+    {% endif %}
 </body>
 </html>

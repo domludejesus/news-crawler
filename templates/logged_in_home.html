@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game News</title>
+    <!-- Include your CSS here -->
+</head>
+<body>
+    <div style="text-align: right;">
+        <a href="/logout">Logout</a>
+    </div>
+    <h1>Latest Video Game News</h1>
+    <button id="fetch-news-btn">Fetch News</button>
+    <ul id="news-list"></ul>
+
+    <script>
+        document.getElementById('fetch-news-btn').addEventListener('click', function() {
+            fetch('/fetch-news')
+                .then(response => response.json())
+                .then(data => {
+                    const newsList = document.getElementById('news-list');
+                    newsList.innerHTML = ''; // Clear existing news
+                    data.titles.forEach(title => {
+                        let listItem = document.createElement('li');
+                        listItem.textContent = title;
+                        newsList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching news:', error));
+        });
+    </script>
+</body>
+</html>

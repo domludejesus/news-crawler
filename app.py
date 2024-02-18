@@ -38,6 +38,11 @@ def fetch_news(url):
             news_items.append(news_item)
     return news_items
 
+@app.route('/')
+def home():
+    # Directly render index.html with is_authenticated flag
+    return render_template('index.html', is_authenticated=current_user.is_authenticated)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -67,11 +72,8 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
 @app.route('/fetch-news')
+@login_required
 def get_news():
     url = 'https://www.ign.com/news'  # Adjust this URL as needed
     news_titles = fetch_news(url)
