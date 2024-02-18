@@ -96,21 +96,23 @@ def get_news():
 @login_required
 def fetch_ai_news():
     url = 'https://openai.com/blog'
-    news_items = []
     response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        # Assuming the h3 tag is wrapped in or followed by an <a> tag
-        articles = soup.find_all('h3', class_='f-subhead-2 mt-8')
-        for article in articles:
-            title = article.text.strip()
-            # Navigate to the parent or next sibling <a> tag to get the link
-            link = article.find_parent('a')['href'] if article.find_parent('a') else None
-            if link and not link.startswith('http'):
-                link = urljoin(url, link)
-            if link:  # Ensure there's a link before adding to the list
-                news_items.append({'title': title, 'link': link})
+        news_items = []
+        # Find all <li> elements that contain news items
+        list_items = soup.select('ul > li > a.ui-link.group.relative.cursor-pointer')
+        for item in list_items:
+            title = item.find('h3').text.strip() if item.find('h3') else 'No Title'
+            link = urljoin(url, item['href'])
+            # Optionally, scrape the date and image URL if needed
+            date = item.find('span', class_='f-body-1 mt-4').text.strip() if item.find('span', class_='f-body-1 mt-4') else 'No Date'
+            image_url = item.find('img')['src'] if item.find('img') else None
+            news_items.append({'title': title, 'link': link, 'date': date, 'image_url': image_url})
+    else:
+        return {'error': 'Failed to fetch AI news'}
     return {'titles': news_items}
+
 
 
 
