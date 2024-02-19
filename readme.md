@@ -1,17 +1,17 @@
 # News Aggregator
 
-Welcome to the News Aggregator, the ultimate solution for staying updated with the latest in video gaming and OpenAI. Our platform is designed to bring you the freshest news by crawling the web for the most recent updates in these domains. Whether you're a gaming enthusiast or an OpenAI aficionado, our aggregator ensures you're always in the know.
+Welcome to the News Aggregator, the ultimate solution for staying updated with the latest in video gaming and OpenAI. Our platform leverages the power of web crawling to bring you the most recent updates in these domains. Designed for gaming enthusiasts and OpenAI followers alike, our aggregator ensures you're always in the loop.
 
 ## Features
 
-- **Latest News**: Get real-time updates from the video game industry and OpenAI developments. Our sophisticated web crawlers scour the internet to bring you the latest articles, announcements, and updates.
-- **User Profiles**: Create your personalized profile with our simple sign-up process. Log in to track your favorite news, customize your news feed, and never miss out on the topics that matter most to you.
-- **Simple and Efficient**: Our intuitive UI makes navigation a breeze. Access the news you care about with just a few clicks.
-- **SQLite Database Integration**: Your preferences and profile details are securely stored in a SQLite database, ensuring quick and reliable access to your data.
+- **Latest News**: Stay ahead with real-time updates from the video game industry and OpenAI developments. Our advanced web crawlers scour the web to bring you the latest articles, announcements, and updates.
+- **User Profiles**: Sign up effortlessly to create your personalized profile. Log in to manage your favorite news, tailor your news feed, and keep up with the topics you care about.
+- **Ease of Use**: Navigate through the news effortlessly with our user-friendly interface. Get access to the information you want with just a few clicks.
+- **SQLite Database**: Securely store your preferences and profile details in an SQLite database for fast and reliable access.
 
 ## Getting Started
 
-To get started with the News Aggregator, follow these simple steps:
+Follow these steps to get your News Aggregator up and running:
 
 1. **Clone the repository**
 
@@ -19,41 +19,64 @@ To get started with the News Aggregator, follow these simple steps:
     git clone https://github.com/yourusername/news-aggregator.git
     ```
 
-2. **Install dependencies**
+2. **Set up a virtual environment**
 
-    Navigate to the project directory and install the required dependencies:
+    Navigate to the project directory and set up a virtual environment:
 
     ```bash
     cd news-aggregator
-    npm install
+    python -m venv venv
     ```
 
-3. **Run the application**
+3. **Activate the virtual environment**
 
-    Start the application with the following command:
+    On Windows:
 
     ```bash
-    npm start
+    venv\Scripts\activate
     ```
 
-    Your application should now be running on `http://localhost:3000`.
+    On Unix or MacOS:
+
+    ```bash
+    source venv/bin/activate
+    ```
+
+4. **Install dependencies**
+
+    Install the required Python packages:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+5. **Run the Flask application**
+
+    Set the environment variable and start the Flask app:
+
+    ```bash
+    export FLASK_APP=app.py # Use 'set' instead of 'export' on Windows
+    flask run
+    ```
+
+    The application will be available at `http://127.0.0.1:5000/`.
 
 ## Technology Stack
 
-- **Frontend**: Describe the technologies used for the frontend (e.g., React, Vue.js).
-- **Backend**: Node.js for backend services, including web crawling and database management.
+- **Backend**: Python Flask for the backend, handling web crawling, database management, and server-side logic.
+- **Frontend**: Simple and responsive UI designed with HTML and CSS.
 - **Database**: SQLite for storing user profiles and preferences.
-- **Web Crawling**: Python scripts using Beautiful Soup for efficient web scraping.
+- **Web Crawling**: Python scripts utilizing libraries such as Beautiful Soup for efficient data extraction.
 
 ## Upcoming Features
 
-- **Enhanced Personalization**: We're working on introducing more customization options for your news feed, allowing you to follow specific topics or sources.
-- **Social Sharing**: Soon, you'll be able to share your favorite news with friends and followers on social media platforms directly from the aggregator.
-- **Mobile App**: Stay tuned for our mobile app, bringing you the news you love on the go.
+- **Enhanced Personalization**: More customization options for your news feed, allowing you to follow specific topics or sources closely.
+- **Social Sharing**: Ability to share news directly on social media platforms from the aggregator.
+- **Mobile Optimization**: Improving the mobile user experience to keep you informed on the go.
 
 ## Contributing
 
-We welcome contributions from the community! If you're interested in helping the News Aggregator grow, please check out our [contributing guidelines](CONTRIBUTING.md).
+Interested in contributing to the News Aggregator? We welcome contributions from the community. Please check out our [contributing guidelines](CONTRIBUTING.md) for more information.
 
 ## License
 
@@ -61,6 +84,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For any queries or feedback, please reach out to us at [your_email@example.com](mailto:your_email@example.com).
+Got questions or feedback? Reach out to us at [your_email@example.com](mailto:your_email@example.com).
 
-Stay updated, stay informed, and explore the world of video games and OpenAI with News Aggregator.
+Explore the world of video games and OpenAI with the News Aggregator – your source for the latest news.
