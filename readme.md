@@ -76,7 +76,7 @@ Follow these steps to get your News Aggregator up and running:
 
 ## Contributing
 
-Interested in contributing to the News Aggregator? We welcome contributions from the community. Please check out our [contributing guidelines](CONTRIBUTING.md) for more information.
+Interested in contributing to the News Aggregator? We welcome contributions from the community. Create a pull request. 
 
 ## License
 
@@ -84,6 +84,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Got questions or feedback? Reach out to us at [your_email@example.com](mailto:your_email@example.com).
+Got questions or feedback? Reach out to us on Linked-in.
 
 Explore the world of video games and OpenAI with the News Aggregator – your source for the latest news.
