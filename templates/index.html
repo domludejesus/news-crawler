@@ -4,164 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game News</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #282c34; /* Dark background */
-            color: #ffffff; /* Light text */
-        }
-        .header {
-            background-color: #20232a;
-            padding: 20px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            color: #61dafb; /* React blue */
-        }
-        #fetch-news-btn , #fetch-ai-news-btn {
-            background-color: #61dafb; /* React blue */
-            border: none;
-            padding: 10px 20px;
-            color: #20232a;
-            text-transform: uppercase;
-            margin: 20px 0;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        #news-list , #ai-news-list {
-            list-style: none;
-            padding: 0;
-            display: none; /* Initially hide the news list */
-        }
-        #news-list li , #ai-news-list li {
-            background-color: #333842;
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #news-list li a, #ai-news-list li a { /* Style for links in the news list */
-            color: #ffffff; /* Set link color to white */
-            text-decoration: none; /* Optional: removes underline from links */
-        }
-        #news-list li a:hover, #ai-news-list li a:hover { /* Optional: style for hover state */
-            color: #61dafb; /* Change color on hover */
-        }
-        .nav {
-            text-align: right;
-            padding: 10px 20px;
-        }
-        .nav a {
-            color: #61dafb;
-            text-decoration: none;
-            padding: 0 10px;
-        }
-    </style>
-    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <div class="header">
-        <h1>Video Game and Open AI News </h1>
-    </div>
-    <div class="nav">
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">Video Game and AI News</h1>
+            <div class="flex justify-end space-x-4">
+                {% if current_user.is_authenticated %}
+                    <a href="/logout" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200">Sign Out</a>
+                {% else %}
+                    <a href="/login" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">Login</a>
+                    <a href="/signup" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-200">Sign Up</a>
+                {% endif %}
+            </div>
+        </header>
         {% if current_user.is_authenticated %}
-            <a href="/logout">Sign Out</a>
+            <div class="flex flex-col items-center space-y-4">
+                <button id="fetch-news-btn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded transition duration-200">Fetch Video Game News</button>
+                <button id="fetch-ai-news-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-6 rounded transition duration-200">Fetch AI News</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <ul id="news-list" class="space-y-2" style="display: none;"></ul>
+                <ul id="ai-news-list" class="space-y-2" style="display: none;"></ul>
+            </div>
         {% else %}
-            <a href="/login">Login</a> | <a href="/signup">Sign Up</a>
+            <p class="text-center mt-5">Welcome! Please log in or sign up to fetch the latest tech news.</p>
         {% endif %}
     </div>
-    {% if current_user.is_authenticated %}
-        <div style="text-align: center;">
-            <button id="fetch-news-btn">Fetch Video Game  News</button>
-            <ul id="news-list"></ul>
-        </div>
-        <div style="text-align: center;">
-            <button id="fetch-ai-news-btn">Fetch Open AI News</button>
-            <ul id="ai-news-list" style="display: none;"></ul>
-        </div>
-        <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/h8ISB2nUVITEWjVgGo" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/nintendo-animal-crossing-new-horizons-h8ISB2nUVITEWjVgGo">via GIPHY</a></p>
 
+    <script>
+        document.getElementById('fetch-news-btn').addEventListener('click', function() {
+            toggleListDisplay('news-list', '/fetch-news', this, 'Fetch Video Game News', 'Hide Video Game News');
+        });
 
-        <script>
-            document.getElementById('fetch-news-btn').addEventListener('click', function() {
-                const newsList = document.getElementById('news-list');
-                const fetchNewsBtn = document.getElementById('fetch-news-btn'); // Reference to the button
-        
-                // Check if the news list is visible
-                if (newsList.style.display === 'none' || newsList.innerHTML === '') {
-                    // If hidden or empty, fetch and display the news
-                    if (newsList.innerHTML === '') {
-                        fetch('/fetch-news')
-                            .then(response => response.json())
-                            .then(data => {
-                                newsList.innerHTML = ''; // Clear existing news, just in case
-                                data.titles.forEach(item => {
-                                    const listItem = document.createElement('li');
-                                    const link = document.createElement('a');
-                                    link.href = item.link;
-                                    link.textContent = item.title;
-                                    link.target = "_blank"; // Open in a new tab/window
-                                    listItem.appendChild(link);
-                                    newsList.appendChild(listItem);
-                                });
-                                newsList.style.display = 'block'; // Ensure the list is shown
-                                fetchNewsBtn.textContent = 'Hide Video Game News'; // Change button text
-                            })
-                            .catch(error => console.error('Error fetching news:', error));
-                    } else {
-                        newsList.style.display = 'block'; // Show the list if it was previously hidden
-                        fetchNewsBtn.textContent = 'Hide Video Game News'; // Change button text
-                    }
-                } else {
-                    // If the list is currently shown, hide it
-                    newsList.style.display = 'none';
-                    fetchNewsBtn.textContent = 'Fetch Video Game News'; // Revert button text
-                }
-            });
-        </script>
+        document.getElementById('fetch-ai-news-btn').addEventListener('click', function() {
+            toggleListDisplay('ai-news-list', '/fetch-ai-news', this, 'Fetch AI News', 'Hide AI News');
+        });
 
-<script>
-    // New script for fetching and toggling AI news
-    document.getElementById('fetch-ai-news-btn').addEventListener('click', function() {
-        const aiNewsList = document.getElementById('ai-news-list');
-        const fetchAINewsBtn = document.getElementById('fetch-ai-news-btn');
-
-        if (aiNewsList.style.display === 'none' || aiNewsList.innerHTML === '') {
-            if (aiNewsList.innerHTML === '') {
-                fetch('/fetch-ai-news')
+        function toggleListDisplay(listId, endpoint, button, fetchText, hideText) {
+            const list = document.getElementById(listId);
+            // Toggle display logic
+            if (list.style.display === 'none' || list.innerHTML === '') {
+                fetch(endpoint) // Use the endpoint parameter for fetching
                     .then(response => response.json())
                     .then(data => {
-                        aiNewsList.innerHTML = '';
+                        list.innerHTML = ''; // Clear existing news
                         data.titles.forEach(item => {
                             const listItem = document.createElement('li');
+                            listItem.className = "bg-gray-700 p-4 rounded-lg";
                             const link = document.createElement('a');
                             link.href = item.link;
                             link.textContent = item.title;
-                            link.target = "_blank"; // Open in a new tab/window
+                            link.className = "text-blue-400 hover:text-blue-300";
+                            link.target = "_blank";
                             listItem.appendChild(link);
-                            aiNewsList.appendChild(listItem);
+                            list.appendChild(listItem);
                         });
-                        aiNewsList.style.display = 'block';
-                        fetchAINewsBtn.textContent = 'Hide AI News';
+                        list.style.display = 'block';
+                        button.textContent = hideText;
                     })
-                    .catch(error => console.error('Error fetching AI news:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        list.style.display = 'none';
+                        button.textContent = fetchText;
+                    });
             } else {
-                aiNewsList.style.display = 'block';
-                fetchAINewsBtn.textContent = 'Hide AI News';
+                list.style.display = 'none';
+                list.innerHTML = '';
+                button.textContent = fetchText;
             }
-        } else {
-            aiNewsList.style.display = 'none';
-            aiNewsList.innerHTML = '';
-            fetchAINewsBtn.textContent = 'Fetch AI News';
         }
-    });
-</script>
-        
-    {% else %}
-        <p style="text-align: center; margin-top: 20px;">Welcome! Please log in or sign up to fetch the latest tech news.</p>
-        <div style="width:100%;height:0;padding-bottom:56%;position:relative;"><iframe src="https://giphy.com/embed/2CV4CzJpL88LHsgjhY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/p5-persona5-persona5strikers-2CV4CzJpL88LHsgjhY">via GIPHY</a></p>
-    {% endif %}
+    </script>
 </body>
 </html>
